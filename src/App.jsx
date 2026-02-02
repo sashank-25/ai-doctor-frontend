@@ -18,23 +18,23 @@ export default function App() {
 
   // ✅ UPDATED FUNCTION (IMPORTANT FIX)
   const analyzeSymptoms = async () => {
-    if (!symptoms.trim()) return;
+  if (!symptoms.trim()) return;
 
-    setAnalysis(null); // 🔥 CLEAR OLD ANALYSIS
-    setLoading(true);
-
-    try {
-      const res = await analyzeSymptomsAPI(symptoms);
-      console.log("✅ AI RESULT FROM BACKEND:", res.data);
-      setAnalysis(res.data);
-      setActiveTab("results");
-    } catch (err) {
-      console.error(err);
-      alert("Analysis failed");
-    } finally {
-      setLoading(false);
-    }
-  };
+  setLoading(true);
+  try {
+    const res = await analyzeSymptomsAPI(symptoms);
+    setAnalysis(res.data);
+    setActiveTab("results");
+  } catch (err) {
+    console.error("Frontend API Error:", err?.response?.data || err.message);
+    alert(
+      err?.response?.data?.message ||
+      "Backend unreachable. Please try again."
+    );
+  } finally {
+    setLoading(false);
+  }
+};
 
   const addQuickSymptom = (symptom) => {
     setSymptoms((prev) => (prev ? `${prev}, ${symptom}` : symptom));
